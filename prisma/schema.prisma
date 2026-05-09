@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  avatar        String?
+  buildingCode  String?
+  unitNumber    String?
+  lat           Float?
+  lng           Float?
+  bio           String?
+  warmthScore   Int       @default(0)
+  gaveCount     Int       @default(0)
+  receivedCount Int       @default(0)
+  flagCount     Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  posts          Post[]
+  exchangesAsReq Exchange[] @relation("ExchangeRequester")
+  exchangesAsOwn Exchange[] @relation("ExchangeOwner")
+  messages       Message[]
+  flagsGiven     Flag[] @relation("FlagGiver")
+  flagsReceived  Flag[] @relation("FlagReceiver")
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  type        String   // "OFFER" or "ASK"
+  title       String
+  description String?
+  category    String   // "TOOLS", "KITCHEN", "SERVICE", "OTHER"
+  imageUrl    String?
+  lat         Float?
+  lng         Float?
+  expiresAt   DateTime
+  status      String   @default("ACTIVE") // "ACTIVE", "ARCHIVED", "COMPLETED"
+  authorId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author    User       @relation(fields: [authorId], references: [id])
+  exchanges Exchange[]
+}
+
+model Exchange {
+  id          String   @id @default(cuid())
+  postId      String
+  requesterId String
+  ownerId     String
+  status      String   @default("PENDING") // "PENDING", "ACCEPTED", "COMPLETED", "CANCELLED"
+  rating      Int?
+  badgeGiven  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  post      Post     @relation(fields: [postId], references: [id])
+  requester User     @relation("ExchangeRequester", fields: [requesterId], references: [id])
+  owner     User     @relation("ExchangeOwner", fields: [ownerId], references: [id])
+  messages  Message[]
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  exchangeId String
+  senderId   String
+  content    String
+  isSystem   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  exchange Exchange @relation(fields: [exchangeId], references: [id])
+  sender   User     @relation(fields: [senderId], references: [id])
+}
+
+model Flag {
+  id         String   @id @default(cuid())
+  reporterId String
+  targetId   String
+  reason     String?
+  createdAt  DateTime @default(now())
+
+  reporter User @relation("FlagGiver", fields: [reporterId], references: [id])
+  target   User @relation("FlagReceiver", fields: [targetId], references: [id])
+}
