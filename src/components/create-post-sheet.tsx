@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
@@ -121,6 +122,9 @@ export default function CreatePostSheet({ open, onOpenChange }: CreatePostSheetP
           <SheetTitle className="text-lg font-bold text-foreground">
             Create a Post
           </SheetTitle>
+          <SheetDescription className="sr-only">
+            Share what you have or ask for what you need
+          </SheetDescription>
         </SheetHeader>
 
         <div className="overflow-y-auto h-full pb-8 px-4 pt-4 space-y-5">

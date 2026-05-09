@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
@@ -46,7 +47,7 @@ export default function PostDetailSheet({
   onOpenChange,
   post,
 }: PostDetailSheetProps) {
-  const { currentUser, posts, addExchange, setView, setCurrentChat, fetchPosts } = useAppStore();
+  const { currentUser, posts, addExchange, setView, setCurrentChat } = useAppStore();
   const [isResponding, setIsResponding] = useState(false);
   const [showFlagDialog, setShowFlagDialog] = useState(false);
 
@@ -105,6 +106,9 @@ export default function PostDetailSheet({
         <SheetContent side="bottom" className="h-[85vh] sm:max-w-lg mx-auto rounded-t-2xl">
           <SheetHeader className="px-4 pt-2 pb-0">
             <SheetTitle className="sr-only">Post Details</SheetTitle>
+            <SheetDescription className="sr-only">
+              View post details and respond to this listing
+            </SheetDescription>
           </SheetHeader>
 
           <div className="overflow-y-auto h-full pb-8 px-4 pt-2">

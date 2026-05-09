@@ -160,9 +160,10 @@ export default function BulletinBoard({ onPostClick }: BulletinBoardProps) {
           <div className="space-y-3 pb-4">
             {filteredPosts.map((post, index) => {
               const catConfig = categoryConfig[post.category] || categoryConfig.OTHER;
+              const expiryDate = new Date(post.expiresAt);
               const isExpiringSoon =
-                isPast(new Date(post.expiresAt.getTime() - 4 * 60 * 60 * 1000));
-              const isExpired = isPast(post.expiresAt);
+                isPast(new Date(expiryDate.getTime() - 4 * 60 * 60 * 1000));
+              const isExpired = isPast(expiryDate);
 
               return (
                 <motion.div
